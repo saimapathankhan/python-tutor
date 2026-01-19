@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Python Tutor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f9;
+        }
+        .nav-link.active {
+            border-bottom: 2px solid #5a67d8; /* Indigo-600 */
+            color: #4338ca; /* Indigo-700 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1.5rem; /* 24px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .ai-output-box {
+            background-color: #f0f4ff; /* Lightest blue for output */
+            border-radius: 0.75rem;
+            border: 1px solid #c3dafe; /* Light blue border */
+        }
+        /* Custom scrollbar for better look */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="bg-white shadow-md sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-indigo-700">
+                        <svg class="inline w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        AI Python Tutor
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="nav-link px-3 py-2 text-sm font-medium text-gray-500 hover:text-indigo-700 active" data-page="home">Home</a>
+                    <a href="#" class="nav-link px-3 py-2 text-sm font-medium text-gray-500 hover:text-indigo-700" data-page="learn">Learn Python</a>
+                    <a href="#" class="nav-link px-3 py-2 text-sm font-medium text-gray-500 hover:text-indigo-700" data-page="debug">Debug Code</a>
+                    <a href="#" class="nav-link px-3 py-2 text-sm font-medium text-gray-500 hover:text-indigo-700" data-page="practice">Practice Code</a> <a href="#" class="nav-link px-3 py-2 text-sm font-medium text-gray-500 hover:text-indigo-700" data-page="check">Check Level</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <div id="loading-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-xl shadow-2xl flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span id="loading-message" class="text-gray-700 font-medium">AI is working its magic...</span>
+            </div>
+        </div>
+
+        <section id="home-page" class="page-content space-y-12">
+            <div class="text-center py-16 card">
+                <span class="text-sm font-semibold text-indigo-600 mb-2 block">AI-Powered Learning</span>
+                <h1 class="text-5xl font-extrabold text-gray-900 mb-4">AI Python <span class="text-indigo-600">Tutor</span></h1>
+                <h2 class="text-xl font-medium text-gray-600 mb-8">Learn • Debug • Improve with AI</h2>
+                <p class="max-w-2xl mx-auto text-lg text-gray-500">
+                    Your personal AI assistant for mastering Python programming. Get instant explanations, fix bugs in seconds, and track your progress.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8"> <div class="card p-8 text-center space-y-4 hover:shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                    <div class="p-4 inline-block rounded-full bg-indigo-100 text-indigo-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        
+                    </div>
+                    
+    
+
+                    <h3 class="text-xl font-semibold text-gray-800">Learn Python</h3>
+                    <p class="text-gray-500">Ask any Python question and get clear, simple explanations tailored to your level.</p>
+                    <a href="#" class="text-indigo-600 font-medium flex items-center justify-center group" data-page-link="learn">
+                        Get Started
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+
+                <div class="card p-8 text-center space-y-4 bg-purple-50 hover:shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                    <div class="p-4 inline-block rounded-full bg-purple-100 text-purple-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Debug Code</h3>
+                    <p class="text-gray-500">Paste your broken code and let our AI find the errors and explain the fix.</p>
+                    <a href="#" class="text-purple-600 font-medium flex items-center justify-center group" data-page-link="debug">
+                        Get Started
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+
+                <div class="card p-8 text-center space-y-4 bg-green-50 hover:shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                    <div class="p-4 inline-block rounded-full bg-green-100 text-green-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.042 12.001 12.001 0 00-2.396 7.828c.677 3.57 2.213 6.647 4.542 9.063C7.2 21.6 9.61 22 12 22s4.8-.4 7.469-1.258a12.001 12.001 0 004.542-9.063 11.955 11.955 0 01-8.618-3.042z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Practice Code</h3>
+                    <p class="text-gray-500">Test your skills on a given challenge and get an instant score and feedback.</p>
+                    <a href="#" class="text-green-600 font-medium flex items-center justify-center group" data-page-link="practice">
+                        Start Challenge
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+                      
+
+                <div class="card p-8 text-center space-y-4 hover:shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                    <div class="p-4 inline-block rounded-full bg-blue-100 text-blue-600">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055v-4.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l-6.16-3.422a12.083 12.083 0 01-.665 6.479A11.952 11.952 0 0112 20.055v-4.055z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800">Check Your Level</h3>
+                    <p class="text-gray-500">Take a quick assessment to find out if you're a Beginner, Intermediate, or Advanced coder.</p>
+                    <a href="#" class="text-blue-600 font-medium flex items-center justify-center group" data-page-link="check">
+                        Get Started
+                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="learn-page" class="page-content space-y-8 hidden">
+            <h2 class="text-3xl font-bold text-gray-800">Learn Python</h2>
+
+            <div class="card p-6 space-y-4">
+                <textarea id="learn-query" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 custom-scrollbar" rows="4" placeholder="e.g., what is python, how does a for loop work, explain list comprehensions"></textarea>
+                <div class="text-right">
+                    <button onclick="handleLearnQuery()" class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded-xl hover:bg-indigo-700 transition duration-150 flex items-center ml-auto">
+                        Explain
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="learn-output-container" class="space-y-4">
+                <div class="ai-output-box p-6 space-y-4">
+                    <div class="flex items-center text-indigo-700 font-bold">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        AI Explanation
+                    </div>
+                    <div id="learn-output" class="text-gray-700 prose max-w-none">
+                        <p>Ask a question about Python above to get an AI-powered explanation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="debug-page" class="page-content space-y-8 hidden">
+            <h2 class="text-3xl font-bold text-gray-800">Debug Your Python Code</h2>
+            <p class="text-gray-500">Paste your broken code below and let AI fix it for you.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="flex flex-col space-y-4">
+                    <div class="bg-gray-800 text-white p-3 rounded-t-xl font-mono text-sm">Input.py</div>
+                    <textarea id="debug-input" class="w-full flex-grow p-4 bg-gray-900 text-green-400 font-mono text-sm rounded-b-xl focus:ring-purple-500 focus:border-purple-500 custom-scrollbar" rows="15" placeholder="Paste your buggy Python code here..."></textarea>
+                    <button onclick="handleDebugCode()" class="bg-purple-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-purple-700 transition duration-150 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        Debug Code
+                    </button>
+                </div>
+
+                <div class="flex flex-col space-y-4">
+                    <div class="bg-gray-200 text-gray-800 p-3 rounded-t-xl font-medium text-sm">AI Output</div>
+                    <div class="flex-grow ai-output-box p-6 space-y-6">
+                        <div id="debug-corrected-code-container">
+                            <h4 class="text-sm font-semibold text-gray-600 mb-2">✅ Corrected Code</h4>
+                            <pre id="debug-corrected-code" class="bg-gray-100 p-4 rounded-lg overflow-auto text-sm text-gray-800 font-mono">def example_function():
+    # Paste code to debug and see the fix here.
+    return "Ready to debug!"</pre>
+                        </div>
+                        <div id="debug-explanation-container">
+                            <h4 class="text-sm font-semibold text-blue-600 mb-2">Explanation of the Fix</h4>
+                            <div id="debug-explanation" class="text-gray-700 prose max-w-none">
+                                <p>The AI will provide a concise explanation of the error and how it fixed the code.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="practice-page" class="page-content space-y-8 hidden">
+            <h2 class="text-3xl font-bold text-gray-800">Practice Python Code Challenge</h2>
+            <p class="text-gray-500">Complete the challenge below and submit your code to get a score (0-100) and feedback.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="flex flex-col space-y-4">
+                    <div class="card p-6 bg-green-50">
+                        <h4 class="text-xl font-semibold text-green-700 mb-2">Challenge: Reverse a String</h4>
+                        <p class="text-gray-700">Write a **Python function** named <code class="font-mono text-sm">reverse_string(text)</code> that takes a string as input and returns the string with its characters reversed. For example, if the input is "hello", the output should be "olleh".</p>
+                    </div>
+
+                    <div class="bg-gray-800 text-white p-3 rounded-t-xl font-mono text-sm mt-4">Your Code.py</div>
+                    <textarea id="practice-input" class="w-full flex-grow p-4 bg-gray-900 text-yellow-400 font-mono text-sm rounded-b-xl focus:ring-green-500 focus:border-green-500 custom-scrollbar" rows="15" placeholder="def reverse_string(text):
+    # Your solution here
+    return ..."></textarea>
+                    
+                    <button onclick="handlePracticeCode()" class="bg-green-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-green-700 transition duration-150 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.042 12.001 12.001 0 00-2.396 7.828c.677 3.57 2.213 6.647 4.542 9.063C7.2 21.6 9.61 22 12 22s4.8-.4 7.469-1.258a12.001 12.001 0 004.542-9.063 11.955 11.955 0 01-8.618-3.042z"></path></svg>
+                        Submit Code
+                    </button>
+                </div>
+
+                <div class="flex flex-col space-y-4">
+                    <div class="bg-gray-200 text-gray-800 p-3 rounded-t-xl font-medium text-sm">AI Feedback</div>
+                    <div class="flex-grow ai-output-box p-6 space-y-6">
+                        <div class="text-center">
+                            <h4 class="text-sm font-semibold text-gray-600 mb-2">🏆 Your Score</h4>
+                            <div id="practice-score" class="text-7xl font-extrabold text-green-600">--</div>
+                            <p class="text-sm text-gray-500">out of 100</p>
+                        </div>
+                        <div id="practice-feedback-container">
+                            <h4 class="text-sm font-semibold text-indigo-600 mb-2">Detailed Feedback</h4>
+                            <div id="practice-feedback" class="text-gray-700 prose max-w-none">
+                                <p>Submit your code above to receive an instant score and detailed feedback on correctness, efficiency, and Python best practices.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="check-page" class="page-content space-y-8 hidden">
+            <div class="card p-10 max-w-md mx-auto text-center space-y-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Check Your Level</h2>
+                <p class="text-gray-500">Enter a Python test score (0-100) or describe your Python experience.</p>
+
+                <input type="number" id="level-score-input" class="w-full p-3 border-4 border-indigo-200 rounded-xl text-4xl text-center font-bold text-gray-800 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g. 75" min="0" max="100">
+
+                <button onclick="handleCheckLevel()" class="w-full bg-indigo-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-indigo-700 transition duration-150">
+                    Check Level
+                </button>
+
+                <div id="level-result-container" class="mt-8 pt-6 border-t border-gray-200">
+                    <div id="level-icon" class="text-6xl text-indigo-500 mb-4 transition-transform duration-500 transform scale-0">⭐</div>
+                    <h3 id="level-title" class="text-2xl font-bold text-gray-800"></h3>
+                    <p id="level-message" class="text-indigo-600"></p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                        <div id="level-progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-4 text-sm text-gray-500 border-t border-gray-100">
+        &copy; 2025 AI Python Tutor. Learn • Debug • Improve
+    </footer>
+
+    <script>
+        // --- API & Auth Configuration (MANDATORY) ---
+        // FIX: Hardcoded key for local running (127.0.0.1) using the key provided by the user.
+        const API_KEY = "AIzaSyBzPfHNoEbN0Hp2wZ-ZlUWlCDdv2P0iZNk"; 
+        const API_MODEL = "gemini-2.5-flash-preview-09-2025";
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${API_MODEL}:generateContent?key=${API_KEY}`;
+        
+        // --- Utility Functions ---
+
+        /**
+         * Parses the text and converts Markdown to HTML for display.
+         * Very basic implementation for demo purposes.
+         */
+        function simpleMarkdownToHtml(markdown) {
+            let html = markdown
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                .replace(/^(<li>.*<\/li>)$/gim, '<ul>$1</ul>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
+            // Fix list formatting after <br> conversion
+            html = html.replace(/<br><ul>/g, '<ul>').replace(/<\/ul><br>/g, '</ul>');
+
+            // Simple handling for code blocks (pre-tag)
+            html = html.replace(/```python\n([\s\S]*?)\n```/g, function(match, code) {
+                return '<pre class="bg-gray-800 text-green-400 p-3 rounded-lg overflow-auto text-sm font-mono mt-2 mb-2">' + code.trim() + '</pre>';
+            });
+
+            return html;
+        }
+
+        /**
+         * General function to make a safe API call with exponential backoff.
+         */
+        async function callGeminiApi(payload, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        return await response.json();
+                    } else if (response.status === 429 && i < retries - 1) {
+                        // Too Many Requests, apply backoff
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; // Exponential increase
+                    } else {
+                        // Crucial: Throw an error including the status code for better debugging.
+                        throw new Error(`API call failed with status: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error("Fetch error:", error);
+                    if (i === retries - 1) throw error; // Throw after final attempt
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+            throw new Error("API call failed after multiple retries.");
+        }
+
+        // --- Core Application Logic ---
+
+        // 1. Navigation Handler
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetPage = link.getAttribute('data-page');
+                showPage(targetPage);
+            });
+        });
+
+        document.querySelectorAll('[data-page-link]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetPage = link.getAttribute('data-page-link');
+                showPage(targetPage);
+            });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+        }
+
+        // Initialize to show the home page
+        window.onload = () => showPage('home');
+
+        /**
+         * Shows the loading modal with a custom message.
+         * @param {string} message 
+         */
+        function showLoading(message) {
+            document.getElementById('loading-message').textContent = message;
+            document.getElementById('loading-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Hides the loading modal.
+         */
+        function hideLoading() {
+            document.getElementById('loading-modal').classList.add('hidden');
+        }
+
+        // --- AI Feature Implementations ---
+
+        // 2. Learn Python (Explanation/Regression-like task to generate descriptive text)
+        async function handleLearnQuery() {
+            const query = document.getElementById('learn-query').value.trim();
+            const outputDiv = document.getElementById('learn-output');
+            
+            if (!query) {
+                outputDiv.innerHTML = '<p class="text-red-500">Please enter a Python concept to explain.</p>';
+                return;
+            }
+
+            showLoading("Generating explanation for: " + query);
+            outputDiv.innerHTML = '...';
+
+            const systemPrompt = `You are the AI Python Tutor. Your role is to provide clear, concise, and structured explanations of Python concepts.
+            Structure your response with:
+            1. A brief, high-level definition.
+            2. Key syntax/structure.
+            3. A simple, runnable Python example (in a code block).
+            4. A conclusion summarizing why this concept is useful.
+            Format the content using Markdown.`;
+
+            const userQuery = `Explain the following Python concept: "${query}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const result = await callGeminiApi(payload);
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Error: Could not retrieve response.";
+                outputDiv.innerHTML = simpleMarkdownToHtml(text);
+            } catch (error) {
+                outputDiv.innerHTML = `<p class="text-red-500">An error occurred: ${error.message}. Please try again.</p>`;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 3. Debug Code (Code Correction/Regression-like task to generate code + explanation)
+        async function handleDebugCode() {
+            const code = document.getElementById('debug-input').value.trim();
+            const correctedCodePre = document.getElementById('debug-corrected-code');
+            const explanationDiv = document.getElementById('debug-explanation');
+
+            if (!code) {
+                explanationDiv.innerHTML = '<p class="text-red-500">Please paste some Python code to debug.</p>';
+                correctedCodePre.textContent = '...';
+                return;
+            }
+
+            showLoading("Analyzing and correcting code...");
+
+            const systemPrompt = `You are the AI Python Debugger. Your task is to fix broken Python code.
+            You MUST return a JSON object with two fields:
+            1. "corrected_code": The complete, runnable, and corrected Python code.
+            2. "explanation": A clear, concise, single-paragraph explanation of the error found and how you fixed it.
+            DO NOT output anything outside of the JSON block.`;
+
+            const userQuery = `Fix the following buggy Python code:\n\n${code}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "corrected_code": { "type": "STRING" },
+                            "explanation": { "type": "STRING" }
+                        },
+                        propertyOrdering: ["corrected_code", "explanation"]
+                    }
+                }
+            };
+
+            try {
+                const result = await callGeminiApi(payload);
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    const responseJson = JSON.parse(jsonText);
+                    correctedCodePre.textContent = responseJson.corrected_code;
+                    explanationDiv.innerHTML = `<p>${responseJson.explanation}</p>`;
+                } else {
+                    throw new Error("API returned an invalid JSON response.");
+                }
+
+            } catch (error) {
+                explanationDiv.innerHTML = `<p class="text-red-500">An error occurred in debugging: ${error.message}. Check your input code format.</p>`;
+                correctedCodePre.textContent = "Error during processing.";
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 4. NEW Practice Code (Structured Output for Score and Feedback)
+        async function handlePracticeCode() {
+            const code = document.getElementById('practice-input').value.trim();
+            const scoreDiv = document.getElementById('practice-score');
+            const feedbackDiv = document.getElementById('practice-feedback');
+
+            if (!code) {
+                feedbackDiv.innerHTML = '<p class="text-red-500">Please enter your Python solution to the challenge.</p>';
+                scoreDiv.textContent = '--';
+                return;
+            }
+
+            showLoading("Evaluating code and generating score...");
+            scoreDiv.textContent = '...';
+            feedbackDiv.innerHTML = '<p>...</p>';
+
+            const systemPrompt = `You are a Python code evaluator. The user has submitted code for a challenge: 'Write a Python function named reverse_string(text) that takes a string as input and returns the string with its characters reversed.'
+
+            Evaluate the user's code for:
+            1. **Correctness**: Does it pass the core test cases (e.g., 'hello' -> 'olleh', '' -> '', 'A man' -> 'naM A')?
+            2. **Best Practices**: Does it use idiomatic Python (e.g., slicing)? Is the function definition correct?
+
+            Based on this, determine a score from 0 to 100.
+
+            You MUST return a JSON object with two fields:
+            1. "score": An integer between 0 and 100 representing the quality of the solution.
+            2. "detailed_feedback": A clear, multi-paragraph explanation of why the score was given, including what was done well and specific suggestions for improvement (e.g., mention Python slicing for reversal).
+            
+            DO NOT output anything outside of the JSON block.`;
+
+            const userQuery = `Evaluate the following user-submitted code for the 'Reverse a String' challenge:\n\n${code}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "score": { "type": "INTEGER" },
+                            "detailed_feedback": { "type": "STRING" }
+                        },
+                        propertyOrdering: ["score", "detailed_feedback"]
+                    }
+                }
+            };
+
+            try {
+                const result = await callGeminiApi(payload);
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    const responseJson = JSON.parse(jsonText);
+                    const score = Math.max(0, Math.min(100, parseInt(responseJson.score)));
+                    scoreDiv.textContent = score;
+                    feedbackDiv.innerHTML = simpleMarkdownToHtml(responseJson.detailed_feedback);
+                } else {
+                    throw new Error("API returned an invalid JSON response.");
+                }
+
+            } catch (error) {
+                feedbackDiv.innerHTML = `<p class="text-red-500">An error occurred during evaluation: ${error.message}. Please check your code format.</p>`;
+                scoreDiv.textContent = "ERR";
+            } finally {
+                hideLoading();
+            }
+        }
+
+
+        // 5. Check Level (Classification task)
+        async function handleCheckLevel() {
+            const scoreInput = document.getElementById('level-score-input');
+            let score = scoreInput.value.trim();
+
+            if (!score || isNaN(parseInt(score))) {
+                document.getElementById('level-message').textContent = 'Please enter a valid score (0-100).';
+                return;
+            }
+            score = Math.max(0, Math.min(100, parseInt(score)));
+            scoreInput.value = score; // Normalize the display
+
+            showLoading("Classifying level...");
+
+            // Determine classification based on score
+            let level, message, icon, progressBarWidth;
+            
+            if (score < 40) {
+                level = 'Beginner';
+                icon = '👶';
+                message = 'Great start! Keep practicing the basics.';
+                progressBarWidth = 30;
+            } else if (score < 70) {
+                level = 'Intermediate';
+                icon = '🛠️';
+                message = 'Solid work! Focus on algorithms and data structures.';
+                progressBarWidth = 60;
+            } else {
+                level = 'Advanced';
+                icon = '🚀';
+                message = 'Excellent mastery! Time to explore specialized domains.';
+                progressBarWidth = 100;
+            }
+
+            // The classification is simple logic for a demo, but we use the
+            // LLM for a more descriptive, 'human-like' classification analysis.
+            // This mimics the third 'AI model' (Classification/Structured Output).
+            // We use the LLM to provide tailored feedback based on the computed level.
+
+            const systemPrompt = `You are a Python skill level classifier. Based on the user's score/level, provide a short, motivating, and specific next step.
+            Your response MUST be a single, encouraging sentence.`;
+
+            const userQuery = `The user is classified as an ${level} with a score of ${score}/100. What is a specific, actionable next step for them in Python programming?`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+            
+            // Update UI immediately with the classification
+            const levelTitle = document.getElementById('level-title');
+            const levelMessage = document.getElementById('level-message');
+            const levelIcon = document.getElementById('level-icon');
+            const progressBar = document.getElementById('level-progress-bar');
+
+            // Reset icon animation
+            levelIcon.classList.add('scale-0');
+
+            // Set content
+            levelTitle.textContent = `You are a ${level}!`;
+            levelMessage.textContent = message;
+            levelIcon.textContent = icon;
+            progressBar.style.width = `${progressBarWidth}%`;
+
+            // Animate
+            setTimeout(() => {
+                levelIcon.classList.remove('scale-0');
+                levelIcon.classList.add('scale-100');
+            }, 100);
+
+            // Fetch the personalized message from the LLM
+            try {
+                const result = await callGeminiApi(payload);
+                const llmMessage = result.candidates?.[0]?.content?.parts?.[0]?.text || "Keep up the great work!";
+                levelMessage.textContent = llmMessage;
+            } catch (error) {
+                console.error("LLM Feedback Error:", error);
+                // Fallback message remains
+            } finally {
+                hideLoading();
+            }
+        }
+        // ---------------------------
+        
+
+// ML Models Integration Calls
+// ---------------------------
+
+// 1. Regression Model Call
+async function useRegression(inputValue) {
+    const response = await fetch("http://127.0.0.1:5000/predict/regression", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: inputValue })
+    });
+    return await response.json();
+}
+
+
+
+
+// 2. SVM Model Call
+async function useSVM(inputValue) {
+    const response = await fetch("http://127.0.0.1:5000/predict/svm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: inputValue })
+    });
+    return await response.json();
+}
+
+// 3. Random Forest Model Call
+async function useRF(inputValue) {
+    const response = await fetch("http://127.0.0.1:5000/predict/rf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: inputValue })
+    });
+    return await response.json();
+}
+// ---------------------------
+// TEST FUNCTIONS (OPTIONAL)
+// ---------------------------
+
+// Test Regression Model
+async function tryRegression() {
+    let result = await useRegression(10);
+    console.log("Regression Prediction:", result);
+}
+
+// Test SVM Model
+async function trySVM() {
+    let result = await useSVM(5);
+    console.log("SVM Prediction:", result);
+}
+
+// Test Random Forest Model
+async function tryRF() {
+    let result = await useRF(7);
+    console.log("Random Forest Prediction:", result);
+}
+
+    </script>
+</body>
+</html>
